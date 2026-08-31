@@ -1,0 +1,191 @@
+[
+  {
+    "case_id": "TC-01",
+    "description": "Benign university order, single short primer, unrelated sequence",
+    "customer_id": "CUST-001",
+    "order": {
+      "order_id": "ORD-1001",
+      "sequences": [
+        "ATGCGTACGTTAGCCTAGGCTAACGTAGCTT"
+      ]
+    },
+    "expected": {
+      "flag": false,
+      "reason": "no_match_clean_customer"
+    }
+  },
+  {
+    "case_id": "TC-02",
+    "description": "Benign diagnostics order, multiple unrelated short primers",
+    "customer_id": "CUST-002",
+    "order": {
+      "order_id": "ORD-1002",
+      "sequences": [
+        "GGCTAGCTAGGATCCGAATTC",
+        "TTAGGCATGCCTAGGAATTCG",
+        "CGGATCCAAGCTTGAGTACTG"
+      ]
+    },
+    "expected": {
+      "flag": false,
+      "reason": "no_match_clean_customer"
+    }
+  },
+  {
+    "case_id": "TC-03",
+    "description": "Benign teaching-lab order, short sequences",
+    "customer_id": "CUST-006",
+    "order": {
+      "order_id": "ORD-1003",
+      "sequences": [
+        "AATTCGGATCCGGTACCTTAAGGCTAGC"
+      ]
+    },
+    "expected": {
+      "flag": false,
+      "reason": "no_match_clean_customer"
+    }
+  },
+  {
+    "case_id": "TC-04",
+    "description": "Single order contains a full known hazard sequence verbatim",
+    "customer_id": "CUST-001",
+    "order": {
+      "order_id": "ORD-1004",
+      "sequences": [
+        "AGCCCAATAAACCACTCTGACTGGCCGAAT"
+      ]
+    },
+    "expected": {
+      "flag": true,
+      "reason": "direct_hazard_match",
+      "hazard_id": "HZ-001"
+    }
+  },
+  {
+    "case_id": "TC-05",
+    "description": "Single order contains a full known hazard sequence embedded within a longer strand",
+    "customer_id": "CUST-002",
+    "order": {
+      "order_id": "ORD-1005",
+      "sequences": [
+        "GATTACAGATTACACTTTCGCCGTTGCCTAAACCTATTTGAAGGAGTCTAGCAGCCTTGACCATTGACC"
+      ]
+    },
+    "expected": {
+      "flag": true,
+      "reason": "direct_hazard_match",
+      "hazard_id": "HZ-003"
+    }
+  },
+  {
+    "case_id": "TC-06",
+    "description": "Same customer splits a hazard sequence across two separate orders (two-part fragmentation)",
+    "customer_id": "CUST-003",
+    "order": {
+      "order_id": "ORD-1006",
+      "sequences": [
+        "AGCCCAATAAACCAC"
+      ]
+    },
+    "linked_order": {
+      "order_id": "ORD-1007",
+      "customer_id": "CUST-003",
+      "sequences": [
+        "TCTGACTGGCCGAAT"
+      ]
+    },
+    "expected": {
+      "flag": true,
+      "reason": "fragmentation_same_customer",
+      "hazard_id": "HZ-001",
+      "note": "Neither individual order matches a hazard sequence alone; concatenation reconstructs HZ-001."
+    }
+  },
+  {
+    "case_id": "TC-07",
+    "description": "Three-part fragmentation across a single customer's order history",
+    "customer_id": "CUST-004",
+    "order": {
+      "order_id": "ORD-1008",
+      "sequences": [
+        "GGATATAGGCAACG"
+      ]
+    },
+    "linked_orders": [
+      {
+        "order_id": "ORD-1009",
+        "customer_id": "CUST-004",
+        "sequences": [
+          "ACATGTGCGGCGAC"
+        ]
+      },
+      {
+        "order_id": "ORD-1010",
+        "customer_id": "CUST-004",
+        "sequences": [
+          "CCTTGCGACAGTGA"
+        ]
+      }
+    ],
+    "expected": {
+      "flag": true,
+      "reason": "fragmentation_same_customer",
+      "hazard_id": "HZ-002"
+    }
+  },
+  {
+    "case_id": "TC-08",
+    "description": "ADVERSARIAL: fragments split across two different customer accounts that share a shipping address cluster and were both created within days of each other",
+    "customer_id": "CUST-004",
+    "order": {
+      "order_id": "ORD-1011",
+      "sequences": [
+        "AGCCCAATAAACCAC"
+      ]
+    },
+    "linked_order": {
+      "order_id": "ORD-1012",
+      "customer_id": "CUST-005",
+      "sequences": [
+        "TCTGACTGGCCGAAT"
+      ]
+    },
+    "expected": {
+      "flag": true,
+      "reason": "fragmentation_related_customers",
+      "hazard_id": "HZ-001",
+      "note": "Requires connecting CUST-004 and CUST-005 via shared address cluster + new-account signal, not just customer_id match. This is the hardest case."
+    }
+  },
+  {
+    "case_id": "TC-09",
+    "description": "Denylisted customer submits an otherwise clean sequence",
+    "customer_id": "CUST-007",
+    "order": {
+      "order_id": "ORD-1013",
+      "sequences": [
+        "TTAGGCTAGCATGGCTAGCATTAGGCATCG"
+      ]
+    },
+    "expected": {
+      "flag": true,
+      "reason": "customer_denylist_match"
+    }
+  },
+  {
+    "case_id": "TC-10",
+    "description": "Sequence with high but incomplete similarity to a hazard sequence (a handful of mismatches) - should be scored, not auto-flagged as a direct match",
+    "customer_id": "CUST-006",
+    "order": {
+      "order_id": "ORD-1014",
+      "sequences": [
+        "AGCCCAATAAACCACTCTGATTTTTTTTTT"
+      ]
+    },
+    "expected": {
+      "flag": false,
+      "reason": "low_similarity_below_threshold"
+    }
+  }
+]

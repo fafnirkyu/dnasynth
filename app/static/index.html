@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DNA Synthesis Screening Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #10151A;
+    --ink-raised: #171E25;
+    --ink-line: #29323B;
+    --paper: #E8ECEE;
+    --paper-dim: #8A96A0;
+    --teal: #3FA796;
+    --teal-bg: rgba(63, 167, 150, 0.14);
+    --amber: #E8A33D;
+    --amber-bg: rgba(232, 163, 61, 0.14);
+    --coral: #E0503A;
+    --coral-bg: rgba(224, 80, 58, 0.14);
+    --base-a: #6FA8DC;
+    --base-c: #E8A33D;
+    --base-g: #3FA796;
+    --base-t: #E0503A;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  header {
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid var(--ink-line);
+  }
+
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    margin: 0;
+    color: var(--paper-dim);
+    font-size: 14px;
+    max-width: 62ch;
+  }
+
+  .status-dot {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--paper-dim);
+    margin-right: 7px;
+    position: relative;
+    top: -1px;
+  }
+  .status-dot.ok { background: var(--teal); }
+  .status-dot.down { background: var(--coral); }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: calc(100vh - 96px);
+  }
+
+  @media (max-width: 860px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  .panel-submit {
+    padding: 28px 28px 40px;
+    border-right: 1px solid var(--ink-line);
+  }
+
+  @media (max-width: 860px) {
+    .panel-submit { border-right: none; border-bottom: 1px solid var(--ink-line); }
+  }
+
+  .panel-submit h2, .panel-log h2 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper-dim);
+    margin: 0 0 18px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    color: var(--paper-dim);
+    margin-bottom: 6px;
+    margin-top: 18px;
+  }
+  label:first-of-type { margin-top: 0; }
+
+  input, textarea, select {
+    width: 100%;
+    background: var(--ink-raised);
+    border: 1px solid var(--ink-line);
+    color: var(--paper);
+    padding: 9px 11px;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13.5px;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  input:focus, textarea:focus, select:focus, button:focus {
+    outline: 2px solid var(--teal);
+    outline-offset: 1px;
+  }
+
+  .field-hint {
+    font-size: 12px;
+    color: var(--paper-dim);
+    margin-top: 5px;
+  }
+
+  button {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    font-weight: 500;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    padding: 10px 16px;
+    cursor: pointer;
+  }
+
+  .btn-primary {
+    background: var(--teal);
+    color: var(--ink);
+    width: 100%;
+    margin-top: 20px;
+  }
+  .btn-primary:hover { filter: brightness(1.08); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--ink-line);
+    color: var(--paper-dim);
+  }
+  .btn-ghost:hover { color: var(--paper); border-color: var(--paper-dim); }
+
+  .demo-row {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .demo-row button { flex: 1; min-width: 120px; font-size: 12.5px; padding: 8px 10px; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--ink-line);
+    margin: 26px 0;
+  }
+
+  .panel-log {
+    padding: 28px 32px 40px;
+    overflow-y: auto;
+  }
+
+  .log-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .empty-log {
+    color: var(--paper-dim);
+    font-size: 14px;
+    padding: 40px 0;
+    border: 1px dashed var(--ink-line);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .entry {
+    border: 1px solid var(--ink-line);
+    border-left-width: 3px;
+    border-radius: 4px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+    background: var(--ink-raised);
+  }
+  .entry.verdict-clear { border-left-color: var(--teal); }
+  .entry.verdict-review_recommended { border-left-color: var(--amber); }
+  .entry.verdict-escalate { border-left-color: var(--coral); }
+
+  .entry-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .entry-ids {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--paper-dim);
+  }
+  .entry-ids b { color: var(--paper); font-weight: 500; }
+
+  .badge {
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .badge.verdict-clear { background: var(--teal-bg); color: var(--teal); }
+  .badge.verdict-review_recommended { background: var(--amber-bg); color: var(--amber); }
+  .badge.verdict-escalate { background: var(--coral-bg); color: var(--coral); }
+
+  .entry-time {
+    font-size: 11.5px;
+    color: var(--paper-dim);
+    margin-top: 4px;
+  }
+
+  .sequences-block {
+    margin-top: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    word-break: break-all;
+  }
+
+  .base-A { color: var(--base-a); }
+  .base-C { color: var(--base-c); }
+  .base-G { color: var(--base-g); }
+  .base-T { color: var(--base-t); }
+
+  .signal-list {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ink-line);
+  }
+
+  .signal {
+    font-size: 13px;
+    padding: 8px 0;
+  }
+  .signal + .signal { border-top: 1px dashed var(--ink-line); }
+
+  .signal-desc { color: var(--paper); }
+  .signal-meta {
+    margin-top: 4px;
+    font-size: 12px;
+    color: var(--paper-dim);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .no-signals {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--paper-dim);
+  }
+
+  .error-banner {
+    background: var(--coral-bg);
+    color: var(--coral);
+    border: 1px solid var(--coral);
+    border-radius: 4px;
+    padding: 10px 14px;
+    font-size: 13px;
+    margin-top: 16px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>DNA Synthesis Screening Console</h1>
+  <p><span class="status-dot" id="statusDot"></span><span id="statusText">Checking connection…</span> — every report here is advisory. A human reviewer makes the final call on any flagged order.</p>
+</header>
+
+<div class="layout">
+  <div class="panel-submit">
+    <h2>Submit an order</h2>
+
+    <label for="orderId">Order ID</label>
+    <input id="orderId" placeholder="auto-generated if left blank" />
+
+    <label for="customerId">Customer ID</label>
+    <input id="customerId" placeholder="e.g. CUST-001" value="CUST-001" />
+
+    <label for="sequences">Sequences (one per line)</label>
+    <textarea id="sequences" placeholder="ATGCGTACGTTAGCCTAGGCTAACGTAGCTT">ATGCGTACGTTAGCCTAGGCTAACGTAGCTT</textarea>
+    <div class="field-hint">Each line is screened as one sequence in this order.</div>
+
+    <button class="btn-primary" id="submitBtn">Screen order</button>
+    <div id="errorBanner" style="display:none" class="error-banner"></div>
+
+    <hr class="divider" />
+
+    <h2>Demo scenarios</h2>
+    <div class="field-hint" style="margin-top:-8px; margin-bottom: 10px;">Fills the form — click Screen order after each.</div>
+    <div class="demo-row">
+      <button class="btn-ghost" id="demoClean">Clean order</button>
+      <button class="btn-ghost" id="demoFragA">Fragment A (CUST-004)</button>
+      <button class="btn-ghost" id="demoFragB">Fragment B (CUST-005)</button>
+    </div>
+
+    <hr class="divider" />
+    <button class="btn-ghost" id="resetBtn" style="width:100%;">Reset to clean demo state</button>
+  </div>
+
+  <div class="panel-log">
+    <div class="log-header-row">
+      <h2>Screening log</h2>
+    </div>
+    <div id="logContainer">
+      <div class="empty-log">No orders screened yet in this session.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = '';
+
+function el(html) {
+  const t = document.createElement('template');
+  t.innerHTML = html.trim();
+  return t.content.firstElementChild;
+}
+
+function colorizeSequence(seq) {
+  return seq.split('').map(ch => {
+    const upper = ch.toUpperCase();
+    if ('ACGT'.includes(upper)) {
+      return `<span class="base-${upper}">${ch}</span>`;
+    }
+    return ch;
+  }).join('');
+}
+
+function verdictLabel(v) {
+  return { clear: 'Clear', review_recommended: 'Review recommended', escalate: 'Escalate' }[v] || v;
+}
+
+async function checkHealth() {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  try {
+    const r = await fetch(API + '/health');
+    if (r.ok) {
+      dot.className = 'status-dot ok';
+      text.textContent = 'Connected';
+    } else {
+      throw new Error('bad status');
+    }
+  } catch (e) {
+    dot.className = 'status-dot down';
+    text.textContent = 'Cannot reach the screening API';
+  }
+}
+
+function renderEntry(order, report) {
+  const container = document.getElementById('logContainer');
+  const emptyMsg = container.querySelector('.empty-log');
+  if (emptyMsg) emptyMsg.remove();
+
+  const seqHtml = order.sequences.map(s => `<div>${colorizeSequence(s)}</div>`).join('');
+
+  let signalsHtml = '<div class="no-signals">No risk signals found.</div>';
+  if (report.signals && report.signals.length > 0) {
+    signalsHtml = '<div class="signal-list">' + report.signals.map(s => `
+      <div class="signal">
+        <div class="signal-desc">${s.description}</div>
+        <div class="signal-meta">${s.source} &middot; risk: ${s.risk_tier} &middot; confidence: ${s.confidence}</div>
+      </div>
+    `).join('') + '</div>';
+  }
+
+  const time = new Date(report.generated_at + 'Z').toLocaleTimeString();
+
+  const entry = el(`
+    <div class="entry verdict-${report.verdict}">
+      <div class="entry-top">
+        <div class="entry-ids"><b>${report.order_id}</b> &mdash; ${report.customer_id}</div>
+        <div class="badge verdict-${report.verdict}">${verdictLabel(report.verdict)}</div>
+      </div>
+      <div class="entry-time">${time}</div>
+      <div class="sequences-block">${seqHtml}</div>
+      ${signalsHtml}
+    </div>
+  `);
+
+  container.prepend(entry);
+}
+
+function showError(message) {
+  const banner = document.getElementById('errorBanner');
+  banner.textContent = message;
+  banner.style.display = 'block';
+  setTimeout(() => { banner.style.display = 'none'; }, 6000);
+}
+
+async function submitOrder() {
+  const orderIdInput = document.getElementById('orderId');
+  const customerId = document.getElementById('customerId').value.trim();
+  const sequencesRaw = document.getElementById('sequences').value.trim();
+
+  if (!customerId || !sequencesRaw) {
+    showError('Customer ID and at least one sequence are required.');
+    return;
+  }
+
+  const orderId = orderIdInput.value.trim() || ('ORD-' + Date.now());
+  const sequences = sequencesRaw.split('\n').map(s => s.trim()).filter(Boolean);
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Screening…';
+
+  try {
+    const res = await fetch(API + '/orders/screen', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order_id: orderId, customer_id: customerId, sequences })
+    });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      throw new Error(body.detail || `Request failed (${res.status})`);
+    }
+    const report = await res.json();
+    renderEntry({ sequences }, report);
+    orderIdInput.value = '';
+  } catch (e) {
+    showError(e.message || 'Could not screen this order.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Screen order';
+  }
+}
+
+async function resetDemo() {
+  const btn = document.getElementById('resetBtn');
+  btn.disabled = true;
+  btn.textContent = 'Resetting…';
+  try {
+    await fetch(API + '/admin/reset', { method: 'POST' });
+    document.getElementById('logContainer').innerHTML = '<div class="empty-log">No orders screened yet in this session.</div>';
+  } catch (e) {
+    showError('Could not reset demo data.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Reset to clean demo state';
+  }
+}
+
+document.getElementById('submitBtn').addEventListener('click', submitOrder);
+document.getElementById('resetBtn').addEventListener('click', resetDemo);
+
+document.getElementById('demoClean').addEventListener('click', () => {
+  document.getElementById('orderId').value = '';
+  document.getElementById('customerId').value = 'CUST-001';
+  document.getElementById('sequences').value = 'ATGCGTACGTTAGCCTAGGCTAACGTAGCTT';
+});
+
+document.getElementById('demoFragA').addEventListener('click', () => {
+  document.getElementById('orderId').value = 'ORD-DEMO-A';
+  document.getElementById('customerId').value = 'CUST-004';
+  document.getElementById('sequences').value = 'AGCCCAATAAACCAC';
+});
+
+document.getElementById('demoFragB').addEventListener('click', () => {
+  document.getElementById('orderId').value = 'ORD-DEMO-B';
+  document.getElementById('customerId').value = 'CUST-005';
+  document.getElementById('sequences').value = 'TCTGACTGGCCGAAT';
+});
+
+checkHealth();
+</script>
+
+</body>
+</html>

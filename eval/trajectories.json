@@ -1,0 +1,385 @@
+[
+  {
+    "order_id": "ORD-1001",
+    "started_at": "2026-08-30T23:15:42.132368+00:00",
+    "finished_at": "2026-08-30T23:15:42.134573+00:00",
+    "steps": [
+      {
+        "step": "load_hazard_bank",
+        "tool": "db.get_all_hazard_sequences",
+        "result_summary": "8 hazard sequences loaded"
+      },
+      {
+        "agent": "sequence_screen",
+        "input": {
+          "sequences": [
+            "ATGCGTACGTTAGCCTAGGCTAACGTAGCTT"
+          ]
+        },
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "fragmentation",
+        "input": {
+          "order_id": "ORD-1001",
+          "customer_id": "CUST-001"
+        },
+        "tool_calls": [
+          "db.get_order_history_for_customer",
+          "db.get_customers_at_same_address"
+        ],
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "customer_verify",
+        "input": {
+          "customer_id": "CUST-001"
+        },
+        "tool_calls": [
+          "db.get_customer",
+          "db.is_customer_denylisted"
+        ],
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "step": "orchestrator_verdict",
+        "logic": "max_severity_rule",
+        "total_signals": 0,
+        "verdict": "clear"
+      }
+    ],
+    "final_verdict": "clear",
+    "human_checkpoint": "This report is advisory. requires_human_review is always True; no code path in this system can auto-approve or auto-reject an order.",
+    "case_id": "TC-01",
+    "case_description": "Benign university order, single short primer, unrelated sequence"
+  },
+  {
+    "order_id": "ORD-1004",
+    "started_at": "2026-08-30T23:15:42.212380+00:00",
+    "finished_at": "2026-08-30T23:15:42.213380+00:00",
+    "steps": [
+      {
+        "step": "load_hazard_bank",
+        "tool": "db.get_all_hazard_sequences",
+        "result_summary": "8 hazard sequences loaded"
+      },
+      {
+        "agent": "sequence_screen",
+        "input": {
+          "sequences": [
+            "AGCCCAATAAACCACTCTGACTGGCCGAAT"
+          ]
+        },
+        "output_signal_count": 1,
+        "output_signals": [
+          {
+            "source": "sequence_screen",
+            "description": "Submitted sequence matches known hazard sequence HZ-001",
+            "risk_tier": "high",
+            "confidence": 1.0,
+            "evidence": {
+              "hazard_id": "HZ-001",
+              "similarity": 1.0,
+              "matched_submitted_sequence": "AGCCCAATAAACCACTCTGACTGGCCGAAT"
+            }
+          }
+        ]
+      },
+      {
+        "agent": "fragmentation",
+        "input": {
+          "order_id": "ORD-1004",
+          "customer_id": "CUST-001"
+        },
+        "tool_calls": [
+          "db.get_order_history_for_customer",
+          "db.get_customers_at_same_address"
+        ],
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "customer_verify",
+        "input": {
+          "customer_id": "CUST-001"
+        },
+        "tool_calls": [
+          "db.get_customer",
+          "db.is_customer_denylisted"
+        ],
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "step": "orchestrator_verdict",
+        "logic": "max_severity_rule",
+        "total_signals": 1,
+        "verdict": "escalate"
+      }
+    ],
+    "final_verdict": "escalate",
+    "human_checkpoint": "This report is advisory. requires_human_review is always True; no code path in this system can auto-approve or auto-reject an order.",
+    "case_id": "TC-04",
+    "case_description": "Single order contains a full known hazard sequence verbatim"
+  },
+  {
+    "order_id": "ORD-1006",
+    "started_at": "2026-08-30T23:15:42.311808+00:00",
+    "finished_at": "2026-08-30T23:15:42.312812+00:00",
+    "steps": [
+      {
+        "step": "load_hazard_bank",
+        "tool": "db.get_all_hazard_sequences",
+        "result_summary": "8 hazard sequences loaded"
+      },
+      {
+        "agent": "sequence_screen",
+        "input": {
+          "sequences": [
+            "AGCCCAATAAACCAC"
+          ]
+        },
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "fragmentation",
+        "input": {
+          "order_id": "ORD-1006",
+          "customer_id": "CUST-003"
+        },
+        "tool_calls": [
+          "db.get_order_history_for_customer",
+          "db.get_customers_at_same_address"
+        ],
+        "output_signal_count": 1,
+        "output_signals": [
+          {
+            "source": "fragmentation",
+            "description": "Sequences from orders ['ORD-1006', 'ORD-1007'] concatenate exactly to reconstruct hazard sequence HZ-001",
+            "risk_tier": "high",
+            "confidence": 1.0,
+            "evidence": {
+              "hazard_id": "HZ-001",
+              "order_ids": [
+                "ORD-1006",
+                "ORD-1007"
+              ],
+              "customer_ids": [
+                "CUST-003"
+              ],
+              "reason": "fragmentation_same_customer"
+            }
+          }
+        ]
+      },
+      {
+        "agent": "customer_verify",
+        "input": {
+          "customer_id": "CUST-003"
+        },
+        "tool_calls": [
+          "db.get_customer",
+          "db.is_customer_denylisted"
+        ],
+        "output_signal_count": 1,
+        "output_signals": [
+          {
+            "source": "customer_verify",
+            "description": "Customer 'QuickGene Solutions' matches multiple shell-account indicators (new account: True, free email domain: True, vague declared purpose: True)",
+            "risk_tier": "medium",
+            "confidence": 1.0,
+            "evidence": {
+              "customer_id": "CUST-003",
+              "account_age_days": 4,
+              "email_domain": "gmail.com",
+              "declared_purpose": "general research"
+            }
+          }
+        ]
+      },
+      {
+        "step": "orchestrator_verdict",
+        "logic": "max_severity_rule",
+        "total_signals": 2,
+        "verdict": "escalate"
+      }
+    ],
+    "final_verdict": "escalate",
+    "human_checkpoint": "This report is advisory. requires_human_review is always True; no code path in this system can auto-approve or auto-reject an order.",
+    "case_id": "TC-06",
+    "case_description": "Same customer splits a hazard sequence across two separate orders (two-part fragmentation)"
+  },
+  {
+    "order_id": "ORD-1011",
+    "started_at": "2026-08-30T23:15:42.411624+00:00",
+    "finished_at": "2026-08-30T23:15:42.412630+00:00",
+    "steps": [
+      {
+        "step": "load_hazard_bank",
+        "tool": "db.get_all_hazard_sequences",
+        "result_summary": "8 hazard sequences loaded"
+      },
+      {
+        "agent": "sequence_screen",
+        "input": {
+          "sequences": [
+            "AGCCCAATAAACCAC"
+          ]
+        },
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "fragmentation",
+        "input": {
+          "order_id": "ORD-1011",
+          "customer_id": "CUST-004"
+        },
+        "tool_calls": [
+          "db.get_order_history_for_customer",
+          "db.get_customers_at_same_address"
+        ],
+        "output_signal_count": 1,
+        "output_signals": [
+          {
+            "source": "fragmentation",
+            "description": "Sequences from orders ['ORD-1011', 'ORD-1012'] concatenate exactly to reconstruct hazard sequence HZ-001",
+            "risk_tier": "high",
+            "confidence": 1.0,
+            "evidence": {
+              "hazard_id": "HZ-001",
+              "order_ids": [
+                "ORD-1011",
+                "ORD-1012"
+              ],
+              "customer_ids": [
+                "CUST-004",
+                "CUST-005"
+              ],
+              "reason": "fragmentation_related_customers"
+            }
+          }
+        ]
+      },
+      {
+        "agent": "customer_verify",
+        "input": {
+          "customer_id": "CUST-004"
+        },
+        "tool_calls": [
+          "db.get_customer",
+          "db.is_customer_denylisted"
+        ],
+        "output_signal_count": 1,
+        "output_signals": [
+          {
+            "source": "customer_verify",
+            "description": "Customer 'Aster Biotech Contract Services' matches multiple shell-account indicators (new account: True, free email domain: False, vague declared purpose: True)",
+            "risk_tier": "medium",
+            "confidence": 0.67,
+            "evidence": {
+              "customer_id": "CUST-004",
+              "account_age_days": 6,
+              "email_domain": "asterbiotech.com",
+              "declared_purpose": "general research"
+            }
+          }
+        ]
+      },
+      {
+        "step": "orchestrator_verdict",
+        "logic": "max_severity_rule",
+        "total_signals": 2,
+        "verdict": "escalate"
+      }
+    ],
+    "final_verdict": "escalate",
+    "human_checkpoint": "This report is advisory. requires_human_review is always True; no code path in this system can auto-approve or auto-reject an order.",
+    "case_id": "TC-08",
+    "case_description": "ADVERSARIAL: fragments split across two different customer accounts that share a shipping address cluster and were both created within days of each other"
+  },
+  {
+    "order_id": "ORD-1013",
+    "started_at": "2026-08-30T23:15:42.496040+00:00",
+    "finished_at": "2026-08-30T23:15:42.497044+00:00",
+    "steps": [
+      {
+        "step": "load_hazard_bank",
+        "tool": "db.get_all_hazard_sequences",
+        "result_summary": "8 hazard sequences loaded"
+      },
+      {
+        "agent": "sequence_screen",
+        "input": {
+          "sequences": [
+            "TTAGGCTAGCATGGCTAGCATTAGGCATCG"
+          ]
+        },
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "fragmentation",
+        "input": {
+          "order_id": "ORD-1013",
+          "customer_id": "CUST-007"
+        },
+        "tool_calls": [
+          "db.get_order_history_for_customer",
+          "db.get_customers_at_same_address"
+        ],
+        "output_signal_count": 0,
+        "output_signals": []
+      },
+      {
+        "agent": "customer_verify",
+        "input": {
+          "customer_id": "CUST-007"
+        },
+        "tool_calls": [
+          "db.get_customer",
+          "db.is_customer_denylisted"
+        ],
+        "output_signal_count": 2,
+        "output_signals": [
+          {
+            "source": "customer_verify",
+            "description": "Customer 'Redline Pharma Consulting' matches a denylist entry",
+            "risk_tier": "high",
+            "confidence": 1.0,
+            "evidence": {
+              "customer_id": "CUST-007",
+              "institution_name": "Redline Pharma Consulting"
+            }
+          },
+          {
+            "source": "customer_verify",
+            "description": "Customer 'Redline Pharma Consulting' matches multiple shell-account indicators (new account: True, free email domain: True, vague declared purpose: True)",
+            "risk_tier": "medium",
+            "confidence": 1.0,
+            "evidence": {
+              "customer_id": "CUST-007",
+              "account_age_days": 1,
+              "email_domain": "outlook.com",
+              "declared_purpose": "confidential - client NDA"
+            }
+          }
+        ]
+      },
+      {
+        "step": "orchestrator_verdict",
+        "logic": "max_severity_rule",
+        "total_signals": 2,
+        "verdict": "escalate"
+      }
+    ],
+    "final_verdict": "escalate",
+    "human_checkpoint": "This report is advisory. requires_human_review is always True; no code path in this system can auto-approve or auto-reject an order.",
+    "case_id": "TC-09",
+    "case_description": "Denylisted customer submits an otherwise clean sequence"
+  }
+]

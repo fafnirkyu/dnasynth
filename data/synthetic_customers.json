@@ -1,0 +1,65 @@
+[
+  {
+    "customer_id": "CUST-001",
+    "institution_name": "Riverbend University - Dept of Molecular Biology",
+    "email_domain": "riverbend.edu",
+    "shipping_address": "220 Lab Way, Riverbend, MA",
+    "declared_purpose": "CRISPR guide RNA synthesis for undergraduate coursework",
+    "account_age_days": 820,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-002",
+    "institution_name": "Northgate Diagnostics Inc.",
+    "email_domain": "northgatedx.com",
+    "shipping_address": "44 Industrial Pkwy, Northgate, OH",
+    "declared_purpose": "PCR primer synthesis for clinical diagnostic assay development",
+    "account_age_days": 1500,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-003",
+    "institution_name": "QuickGene Solutions",
+    "email_domain": "gmail.com",
+    "shipping_address": "9 Rural Route 2, Unit B, Millfork, ID",
+    "declared_purpose": "general research",
+    "account_age_days": 4,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-004",
+    "institution_name": "Aster Biotech Contract Services",
+    "email_domain": "asterbiotech.com",
+    "shipping_address": "9 Rural Route 2, Unit D, Millfork, ID",
+    "declared_purpose": "general research",
+    "account_age_days": 6,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-005",
+    "institution_name": "Bright Path Labs LLC",
+    "email_domain": "brightpathlabs.net",
+    "shipping_address": "9 Rural Route 2, Unit C, Millfork, ID",
+    "declared_purpose": "general research",
+    "account_age_days": 3,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-006",
+    "institution_name": "Fennimore State College - Biochem Teaching Lab",
+    "email_domain": "fennimore.edu",
+    "shipping_address": "1 Campus Loop, Fennimore, WI",
+    "declared_purpose": "restriction enzyme site verification, teaching lab",
+    "account_age_days": 640,
+    "denylist_flag": false
+  },
+  {
+    "customer_id": "CUST-007",
+    "institution_name": "Redline Pharma Consulting",
+    "email_domain": "outlook.com",
+    "shipping_address": "PO Box 118, Ashworth, NV",
+    "declared_purpose": "confidential - client NDA",
+    "account_age_days": 1,
+    "denylist_flag": true
+  }
+]

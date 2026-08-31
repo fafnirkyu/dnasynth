@@ -1,0 +1,66 @@
+[
+  {
+    "hazard_id": "HZ-001",
+    "sequence": "AGCCCAATAAACCACTCTGACTGGCCGAAT",
+    "length": 30,
+    "label": "synthetic-marker-1",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-002",
+    "sequence": "GGATATAGGCAACGACATGTGCGGCGACCCTTGCGACAGTGA",
+    "length": 42,
+    "label": "synthetic-marker-2",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-003",
+    "sequence": "CTTTCGCCGTTGCCTAAACCTATTTGAAGGAGTCTAGCAGCC",
+    "length": 42,
+    "label": "synthetic-marker-3",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-004",
+    "sequence": "AGTAAGGCACAATACCTCGTCCGTGTTACCAGACCA",
+    "length": 36,
+    "label": "synthetic-marker-4",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-005",
+    "sequence": "CAAGACGTCCTCTTCAATGTTTAAATGACC",
+    "length": 30,
+    "label": "synthetic-marker-5",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-006",
+    "sequence": "CTCGTCATAAAACCTTTCTACTATGTGTTCCGCAAGAATCAACAACTA",
+    "length": 48,
+    "label": "synthetic-marker-6",
+    "risk_tier": "medium",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-007",
+    "sequence": "AATGGCGCGTCGTGAATAACGCGACGGCTGAGACGA",
+    "length": 36,
+    "label": "synthetic-marker-7",
+    "risk_tier": "high",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  },
+  {
+    "hazard_id": "HZ-008",
+    "sequence": "GGCGCGTGAATGAAGCGCTTAAACAGCTCAGGAGCC",
+    "length": 36,
+    "label": "synthetic-marker-8",
+    "risk_tier": "medium",
+    "note": "Synthetic placeholder sequence for hackathon evaluation only - not a real biological hazard signature."
+  }
+]
