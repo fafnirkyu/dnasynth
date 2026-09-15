@@ -71,6 +71,13 @@ CHANGELOG.md          # improvement changelog with real bugs, decisions, and evi
 Dockerfile / docker-compose.yml
 ```
 
+GitHub Actions runs the offline test suite on every push and pull request.
+The mocked baseline test uses a temporary database and results file; it does
+not replace your local `data/screening.db` or the checked-in Gemini-backed
+`eval/results.json`. For a lightweight
+local reproduction of CI, install `requirements-ci.txt` in Python 3.11 and
+run `python -m pytest -q`.
+
 ## Reproduction guide
 
 ### Requirements
