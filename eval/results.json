@@ -1,0 +1,98 @@
+{
+  "results": [
+    {
+      "case_id": "TC-01",
+      "description": "Benign university order, single short primer, unrelated sequence",
+      "expected_flag": false,
+      "agent_flag": false,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": true
+    },
+    {
+      "case_id": "TC-02",
+      "description": "Benign diagnostics order, multiple unrelated short primers",
+      "expected_flag": false,
+      "agent_flag": false,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": true
+    },
+    {
+      "case_id": "TC-03",
+      "description": "Benign teaching-lab order, short sequences",
+      "expected_flag": false,
+      "agent_flag": false,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": true
+    },
+    {
+      "case_id": "TC-04",
+      "description": "Single order contains a full known hazard sequence verbatim",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-05",
+      "description": "Single order contains a full known hazard sequence embedded within a longer strand",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-06",
+      "description": "Same customer splits a hazard sequence across two separate orders (two-part fragmentation)",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-07",
+      "description": "Three-part fragmentation across a single customer's order history",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-08",
+      "description": "ADVERSARIAL: fragments split across two different customer accounts that share a shipping address cluster and were both created within days of each other",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-09",
+      "description": "Denylisted customer submits an otherwise clean sequence",
+      "expected_flag": true,
+      "agent_flag": true,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": false
+    },
+    {
+      "case_id": "TC-10",
+      "description": "Sequence with high but incomplete similarity to a hazard sequence (a handful of mismatches) - should be scored, not auto-flagged as a direct match",
+      "expected_flag": false,
+      "agent_flag": false,
+      "agent_correct": true,
+      "baseline_flag": false,
+      "baseline_correct": true
+    }
+  ],
+  "agent_accuracy": 1.0,
+  "baseline_accuracy": 0.4,
+  "baseline_cases_attempted": 10,
+  "total_cases": 10
+}
