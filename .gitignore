@@ -1,9 +1,6 @@
-.venv
-__pycache__
+.venv/
+__pycache__/
 *.pyc
-.pytest_cache
-tests
-.git
+.pytest_cache/
 .env
 data/screening.db
-eval/results.json
